@@ -1,0 +1,131 @@
+﻿@using CrudClientes.Helpers
+
+@model IEnumerable<CrudClientes.Models.ClientModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lista de Clientes</h1>
+
+<p>
+    <a asp-action="Create"> + Adicionar novo cliente</a>
+</p>
+
+@using (Html.BeginForm())
+{
+<div class="filter-section">
+    <h4>Filtro de pesquisa</h4>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="form-group form-inline">
+                CPF: @Html.TextBox("inputCpf", null, new {@class="input-filter", placeholder="378.846.777-55"})
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-inline">
+                Nome: @Html.TextBox("inputNome", null, new {@class="input-filter"})
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-inline">
+                Data de Nasc.: @Html.TextBox("inputDtnasc", null, new {@class="input-filter", type="date"})
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-inline">
+                Sexo:
+                @Html.TextBox("inputGender", "M", new {type="radio", name="inputGender"}) Masculino
+                @Html.TextBox("inputGender", "F", new {type="radio", name="inputGender"}) Feminino
+            </div>
+        </div>
+    </div>      
+    <div class="row" style="padding-top: 10px">
+        <div class="col-md-2">
+            <div class="form-group form-inline">
+                Estado: @Html.DropDownList("inputEstado", new SelectList(EnderecoHelper.GetEstados(),"Value","Text"), "Selecione", new {@class="input-filter", @onchange="searchCity(this.value)"})
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group form-inline">
+                Cidade: @Html.DropDownList("inputCidade", new SelectList(""), "Selecione", new {@class="input-filter"})
+            </div>
+        </div>
+        <div class="col-md-3 btn-section-filter">
+            <button class="btn btn-primary" type="submit">Pesquisar</button>
+            <button class="btn btn-secondary" type="submit" onclick="clearFilter();">Limpar</button>
+        </div>
+    </div>      
+
+</div>
+}
+
+<table id="clients-table" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CPF)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DataNascimento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sexo)
+            </th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CPF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataNascimento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cidade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sexo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Excluir</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts{
+    <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#clients-table').DataTable({
+                searching: false, 
+                lengthChange: false, 
+                language: {
+	                "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+                }
+            });
+        } );
+    </script>
+}

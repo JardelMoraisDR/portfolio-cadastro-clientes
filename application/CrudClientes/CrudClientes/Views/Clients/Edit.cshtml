@@ -1,0 +1,94 @@
+﻿@using CrudClientes.Helpers
+@model CrudClientes.Models.ClientModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edição de Cliente</h1>
+
+<h4>Ficha cadastral</h4>
+<hr />
+<form asp-action="Edit">
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="CPF" class="control-label"></label>
+                <input asp-for="CPF" class="form-control" placeholder="378.846.777-55" readonly="true" />
+                <span asp-validation-for="CPF" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="DataNascimento" class="control-label"></label>
+                <input asp-for="DataNascimento" class="form-control" type="date"/>
+                <span asp-validation-for="DataNascimento" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Sexo" class="control-label"></label>
+                <select asp-for="Sexo" class="form-control">
+                    <option value="M">Masculino</option>
+                    <option value="F">Feminino</option>
+                </select>
+                <span asp-validation-for="Sexo" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Estado" class="control-label"></label>
+                @Html.DropDownList("Estado", new SelectList(EnderecoHelper.GetEstados(),"Value","Text"), "Selecione", new {@class="form-control", @onchange="searchCity(this.value, '#Cidade')"})
+                <span asp-validation-for="Estado" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Cidade" class="control-label"></label>
+                <select asp-for="Cidade" class="form-control">
+                </select>
+                <span asp-validation-for="Cidade" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-md-12">
+            <div class="form-group">
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+                <input type="button" value="Limpar" class="btn btn-secondary" onclick="clearFields()"/>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<div>
+    <a asp-action="Index">Voltar para a lista</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script type="text/javascript">
+    window.onload = function() {
+        searchCity($('#Estado').val(), '#Cidade');
+        $('#Cidade').val('@Html.DisplayFor(model => model.Cidade)');
+    };   
+</script>
